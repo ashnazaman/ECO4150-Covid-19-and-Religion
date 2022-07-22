@@ -45,10 +45,17 @@ label var Belt "Bible Belt States"
 
 gen logpsalms = log(Psalms)
 
-//PRE-POST ANALYSIS 
-
 //Setting up Stata to handle the appropriate panel data
 xtset State Date
+
+//first difference the Pslams variable 
+by State: gen newpsalms = Psalms[_n]- Psalms[_n-1] //make stationary first 
+
+
+
+//PRE-POST ANALYSIS 
+
+
 
 //Looking at the trend for the states
 xtline Psalms, tline(1mar2020)
@@ -56,7 +63,7 @@ xtline Psalms, tline(1mar2020)
 //Looking at a few states in particular (highest populations) - FIGURE 2
 //California, Texas, Florida, New York
 xtline Psalms if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
-xtline logpsalms if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
+xtline Psalms if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
 
 
 eststo clear
