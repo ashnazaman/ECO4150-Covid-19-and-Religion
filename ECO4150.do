@@ -43,8 +43,6 @@ gen Belt = 0
 replace Belt = 1 if (State ==1 | State ==4 | State == 8 | State == 48 | State == 10 | State==11 | State == 18 | State==19 | State==21| State ==25 | State==26 | State == 34 | State == 37 | State == 41 | State== 43 | State ==44 | State==47 | State==49)
 label var Belt "Bible Belt States"
 
-
-
 // ---------------------------------NEW TESTAMENT ANALYSIS ---------------------------
 //DIFF INDIFF ANALYSIS FOR STATE LEVEL DATA 
 
@@ -112,15 +110,22 @@ save "/Users/ashnaareeb/Desktop/ECO4150/ECO4150BoR.dta", replace
 
 //-------------------------------------- ANALYSIS - SETUP -------------------------------------------
 
+//Format date variable 
+gen monthly_date = mofd(Date)
+
+format monthly_date %tm
+
+
 //Setting up Stata to handle the appropriate panel data
-xtset State Date
+xtset State monthly_date, monthly
 
 //Looking at the trend for the states
-xtline BookofRevelation, tline(1mar2020)
+xtline BookofRevelation, tline(2020m3)
 
 //Looking at a few states in particular (highest populations) - FIGURE 2
 //California, Texas, Florida, New York
-xtline BookofRevelation if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
+xtline BookofRevelation if State==5 | State==44 | State ==10 | State ==33, tline(2020m3)
+xtline newpsalms if State==5 | State==44 | State ==10 | State ==33, tline(2020m3)
 
 
 //--------------------------------------- ANALYSIS - PRE-POST -------------------------------------- 
@@ -137,7 +142,7 @@ reg BookofRevelation Lockdown Belt Prayer Religion i.Months i.State
 eststo B3
 reg BookofRevelation Lockdown Belt Prayer Religion i.Year i.State
 eststo B4
-reg Bookof Lockdown Belt Prayer Religion i.Year i.Months i.State
+reg BookofRevelation Lockdown Belt Prayer Religion i.Year i.Months i.State
 eststo B5
 esttab B1 B2 B3 B4 B5 using firstreg.tex, replace se noobs notes label title(Initial Pre-post Analysis \label{tab1})
 
@@ -299,16 +304,16 @@ xtset State Date
 
 //TABLE 9
 eststo clear
-xtdidregress (BookofRevelation) (epost), group(State) time(Date) nogteffects //No time effects 
+xtdidregress (BookofRevelation) (epost), group(State) time(monthly_date) nogteffects //No time effects 
 eststo did1
-xtdidregress (BookofRevelation) (epost), group(State) time(Date) //including group and time effects 
+xtdidregress (BookofRevelation) (epost), group(State) time(monthly_date) //including group and time effects 
 eststo did2
 
 //Using emergency travel restriction order by state (March, April, or none) on state-level data 
 //TABLE 9 CONTINUED
-xtdidregress (BookofRevelation) (travelpost), group(State) time(Date) nogteffects //No time effects 
+xtdidregress (BookofRevelation) (travelpost), group(State) time(monthly_date) nogteffects //No time effects 
 eststo did3
-xtdidregress (BookofRevelation) (travelpost), group(State) time(Date)
+xtdidregress (BookofRevelation) (travelpost), group(State) time(monthly_date)
 eststo did4
 
 esttab did1 did2 did3 did4 using firstapproachdiff.tex, replace se noobs notes label title(First Approach: State Emergency Declarations on Book of Revelation Searches\label{tab1})
@@ -322,6 +327,8 @@ esttab did1 did2 did3 did4 using firstapproachdiff.tex, replace se noobs notes l
 clear
 import excel "/Users/ashnaareeb/Desktop/ECO4150/Metro Level Data.xlsx", sheet("Metro Level") firstrow
 
+
+
 //Create national lockdown variable again 
 gen Lockdown = 0 
 replace Lockdown =1 if Date >= td(01mar2020)
@@ -334,8 +341,15 @@ encode Metro, gen(Metroarea)
 //Dropping missing data 
 drop if Metroarea ==.
 
+//Change date variable lol 
+
+gen monthly_date = mofd(Date)
+
+format monthly_date %tm
+
+
 //Set panel data to metro 
-xtset Metroarea Date
+xtset Metroarea monthly_date, monthly
 
 //Summary Stats - TABLE 2 
 eststo clear 
@@ -361,17 +375,41 @@ replace CountyEmergencyDate = 0 if missing(CountyEmergencyDate)
 
 //TABLE 10 
 //Running a regression using County level emergency dates on each metro area 
-xtdidregress (BookofRevelation) (CountyEmergencyDate), group(Metroarea) time(Date) nogteffects //No time effects
+xtdidregress (BookofRevelation) (CountyEmergencyDate), group(Metroarea) time(monthly_date) nogteffects //No time effects
 eststo metro4 
-xtdidregress (BookofRevelation) (CountyEmergencyDate), group(Metroarea) time(Date) //Including time effects
+xtdidregress (BookofRevelation) (CountyEmergencyDate), group(Metroarea) time(monthly_date) //Including time effects
 eststo metro5
 
 esttab metro4 metro5 using secondapproachmetrodiff2.tex, replace se noobs notes label title(Second Approach: Metro Emergency Declarations on Book of Revelation Searches\label{tab1})
 //Significant results 
 
+//Psalms Analysis 
+
+xtdidregress (Psalms) (CountyEmergencyDate), group(Metroarea) time(monthly_date) nogteffects //No time effects
+eststo psalms1 
+xtdidregress (Psalms) (CountyEmergencyDate), group(Metroarea) time(monthly_date) //Including time effects
+eststo psalms2
+
+//Both statistically significant and positive suggesting that prayers increased during the time of the pandemic 
+
+//check and do psalms analysis 
+//collect metro level data for book of daniel lol 
+
+
+
 //Represenative county to numeric 
 encode RepresentativeCounty, gen(County)
 keep if RepresentativeCounty != "0" 
+
+
+
+
+
+
+
+
+
+
 
 
 // ANALYSIS DIFF INDIFF USING OTHER BOOKS ------------------------------------------
@@ -663,5 +701,21 @@ esttab b16 b17 b18 b19 b20 using old4.tex, replace se noobs notes label title(Th
 esttab b21 b22 b23 b24 b25 using old5.tex, replace se noobs notes label title(The National Lockdown and the Old Testament \label{tab1})
 esttab b26 b27 b28 b29 b30 using old6.tex, replace se noobs notes label title(The National Lockdown and the Old Testament \label{tab1})
 esttab b31 b32 b33 b34 b35 using old7.tex, replace se noobs notes label title(The National Lockdown and the Old Testament \label{tab1})
+
+
+
+
+//Psalms analysis 
+gen monthly_date = mofd(Date)
+format monthly_date %tm
+//Setting up Stata to handle the appropriate panel data
+xtset State monthly_date, monthly
+xtdidregress (Psalms) (epost), group(State) time(monthly_date) nogteffects //No time effects 
+//eststo did1
+xtdidregress (Psalms) (epost), group(State) time(monthly_date) //including group and time effects 
+
+
+
+
 
 

@@ -45,17 +45,23 @@ label var Belt "Bible Belt States"
 
 gen logpsalms = log(Psalms)
 
+//Format date variable 
+gen monthly_date = mofd(Date)
+
+format monthly_date %tm
+
 //Setting up Stata to handle the appropriate panel data
-xtset State Date
+xtset State monthly_date, monthly
+
+//Testing for unit root 
+xtunitroot llc Psalms // No unit root - do not need to difference 
 
 //first difference the Pslams variable 
-by State: gen newpsalms = Psalms[_n]- Psalms[_n-1] //make stationary first 
+by State: gen newpsalms = Psalms[_n]- Psalms[_n-1] //
 
 
 
 //PRE-POST ANALYSIS 
-
-
 
 //Looking at the trend for the states
 xtline Psalms, tline(1mar2020)
@@ -63,7 +69,7 @@ xtline Psalms, tline(1mar2020)
 //Looking at a few states in particular (highest populations) - FIGURE 2
 //California, Texas, Florida, New York
 xtline Psalms if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
-xtline Psalms if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
+xtline newpsalms if State==5 | State==44 | State ==10 | State ==33, tline(1mar2020)
 
 
 eststo clear
@@ -94,9 +100,8 @@ esttab i44 i55 using psalmsinteracts.tex, replace se notes wide label title(Redu
 //--------------------------------------- Robustness Check ----------------------------------------
 //Generate fake lockdown period to perform a Robustness Check using a different date
 
-//TABLE 7
 gen RobustLockdown = 0 
-replace RobustLockdown = 1 if Date >= td(01mar2006)
+replace RobustLockdown = 1 if Date >= td(2006m3)
 
 xtreg Psalms RobustLockdown,fe
 eststo r1
@@ -111,9 +116,8 @@ eststo r6
 
 esttab r5 r6 using robustness.tex, replace se noobs wide notes label title(First Approach: Estimation using Fake Lockdown Periods\label{tab1})
 
-//TABLE 8
 gen RobustLockdown3 = 0 
-replace RobustLockdown3 = 1 if Date >= td(01mar2021)
+replace RobustLockdown3 = 1 if Date >= td(2021m3)
 
 xtreg Psalms RobustLockdown3,fe
 eststo r12
@@ -163,23 +167,21 @@ replace travelpost =1 if inlist(BState, "New Jersey", "New Mexico", "New York", 
 replace travelpost =1 if inlist(BState, "Vermont", "Washington", "Wisconsin") & Date >=td(01mar2020)
 replace travelpost =1 if inlist(BState, "District of Columbia", "Maine") & Date >= td(01apr2020)
 
-//Setting up Stata to handle the appropriate panel data
-xtset State Date
 
 //Using emergency order day by state (March, April, or none) on state-level data
 
 //TABLE 9
 eststo clear
-xtdidregress (Psalms) (epost), group(State) time(Date) nogteffects //No time effects 
+xtdidregress (Psalms) (epost), group(State) time(monthly_date) nogteffects //No time effects 
 eststo did11
-xtdidregress (Psalms) (epost), group(State) time(Date) //including group and time effects 
+xtdidregress (Psalms) (epost), group(State) time(monthly_date) //including group and time effects 
 eststo did22
 
 //Using emergency travel restriction order by state (March, April, or none) on state-level data 
 //TABLE 9 CONTINUED
-xtdidregress (Psalms) (travelpost), group(State) time(Date) nogteffects //No time effects 
+xtdidregress (Psalms) (travelpost), group(State) time(monthly_date) nogteffects //No time effects 
 eststo did33
-xtdidregress (Psalms) (travelpost), group(State) time(Date)
+xtdidregress (Psalms) (travelpost), group(State) time(monthly_date)
 eststo did44
 
 esttab did11 did22 did33 did44 using psalmsstatediffindiff.tex, replace se noobs notes label title(First Approach: State Emergency Declarations on Book of Revelation Searches\label{tab1})
@@ -209,8 +211,13 @@ encode Metro, gen(Metroarea)
 //Dropping missing data 
 drop if Metroarea ==.
 
-//Set panel data to metro 
-xtset Metroarea Date
+//Format date variable 
+gen monthly_date = mofd(Date)
+
+format monthly_date %tm
+
+//Setting up Stata to handle the appropriate panel data
+xtset Metroarea monthly_date, monthly
 
 //Simple OLS; regressing Book of Revelation on Lockdown Dummy
 eststo clear 
@@ -230,9 +237,9 @@ replace CountyEmergencyDate = 0 if missing(CountyEmergencyDate)
 
 //TABLE 10 
 //Running a regression using County level emergency dates on each metro area 
-xtdidregress (Psalms) (CountyEmergencyDate), group(Metroarea) time(Date) nogteffects //No time effects
+xtdidregress (Psalms) (CountyEmergencyDate), group(Metroarea) time(monthly_date) nogteffects //No time effects
 eststo metro44 
-xtdidregress (Psalms) (CountyEmergencyDate), group(Metroarea) time(Date) //Including time effects
+xtdidregress (Psalms) (CountyEmergencyDate), group(Metroarea) time(monthly_date) //Including time effects
 eststo metro55
 
 esttab metro44 metro55 using psalmsmetrodiffindiff.tex, replace se noobs notes label title(Second Approach: Metro Emergency Declarations on Book of Revelation Searches\label{tab1})

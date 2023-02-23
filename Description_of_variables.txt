@@ -1,0 +1,215 @@
+Ethnic heterogeneity and covid: description of variables
+
+
+Epidemiological profile:
+
+fairorpoorhealth: Percentage of adults reporting fair or poor health (age-adjusted).*
+
+smokers: Percentage of adults who are current smokers.*
+
+Adultswithobesity: Percentage of the adult population (age 20 and older) that reports a body mass index (BMI) greater than or equal to 30 kg/m2.*
+
+Physicallyinactive: Percentage of adults age 20 and over reporting no leisure-time physical activity.*
+
+Withaccesstoexerciseopportunitie: Percentage of population with adequate access to locations for physical activity.*
+
+Excessivedrinking: Percentage of adults reporting binge or heavy drinking.*
+
+Chlamydiarate: Number of newly diagnosed chlamydia cases per 100,000 population.*
+
+Vaccinated: Percentage of fee-for-service (FFS) Medicare enrollees that had an annual flu vaccination.*
+
+lifeexpectancy: Average number of years a person can expect to live.*
+
+Adultswithdiabetes: Percentage of adults aged 20 and above with diagnosed diabetes.*
+
+Hivprevalencerate: Number of people aged 13 years and older living with a diagnosis of human immunodeficiency virus (HIV) infection per 100,000 population.*
+
+Insufficientsleep: Percentage of adults who report fewer than 7 hours of sleep on average.*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Socioeconomic characteristics:
+
+uninsuredadults: Percentage of adults under age 65 without health insurance.*
+Poverty: Percentage of poverty.
+disconnectedyouth: Percentage of teens and young adults ages 16-19 who are neither working nor in school.*
+
+Averagetrafficvolumepermeterofma: Average traffic volume per meter of major roadways in the county.*
+
+Notproficientinenglish: Percentage of population that is not proficient in English.*
+residentialsegregationblackwhite: Index of dissimilarity where higher values indicate greater residential segregation between Black and White county residents.*
+
+Residentialsegregationnonwhitewh/seg_index: Index of dissimilarity where higher values indicate greater residential segregation between non-White and White county residents.*
+
+density_2018: Density of population in a county
+unemployed: Percentage of population ages 16 and older unemployed but seeking work.*
+Socialassociationrate: Number of membership associations per 10,000 population.*
+Overcrowding: Percentage of households with overcrowding.*
+immigrants: Percentage of foreign-born population.
+male: Percentage of male residents.
+age: Average age of residents.
+educ: Percentage of adults with at least a high school degree.
+urban: Percentage of population living in an urban area.*
+avgrad_reading: Average grade level performance for 3rd graders on English Language Arts standardized tests*
+
+avgrad_math: Average grade level performance for 3rd graders on math standardized tests.*
+
+
+
+average_occupancy_per_room: Average number of occupants per room (using the average of each intervals given by the Census Bureau).
+occupancy_morethan1: Percentage of households having more than 1 occupants per room.
+occupancy_morethan2: Percentage of households having more than 2 occupants per room.
+workers_nonteleworking: Percentage of workers that can't work form home (estimations).
+
+
+County health’s characteristics:
+
+otherprimarycareproviderrate: Ratio of population to primary care providers other than physicians.*
+
+healthworker: ratio of population to primary care providers.*
+
+averagedailypm25: Average daily density of fine particulate matter in micrograms per cubic meter (PM2.5).*
+
+hop: Number of hospitals in a county.
+
+Lbeds: Number of licensed beds in a county. 
+
+Sbeds: Number of staffed beds in a county. 
+
+over65: Percentage of population ages 65 and older.*
+
+inc: The income where half of households in a county earn more and half of households earn less.*
+
+mean_inc: Mean income in a county.
+
+Incineq: Income Inequality (ratio of mean on median income).
+
+mask_never: The estimated share of people in this county who would say never in response to the question: 
+“How often do you wear a mask in public when you expect to be within six feet of another person?”.**
+mask_rarely: The estimated share of people in this county who would say rarely.**
+mask_sometimes: The estimated share of people in this county who would say sometimes.**
+mask_frequently: The estimated share of people in this county who would say frequently.**
+mask_always: The estimated share of people in this county who would say always.**
+mask_average: The average of mask use (scale of 0 to 4)
+
+
+
+Governor’s caracteristics:
+
+tenure: number of years as governor.
+
+ageg: age of the governor.
+
+educg: dummy if completed college (1 if so).
+
+numbofdegree: 0, 1, 2 degrees from college.
+
+lnumbofdeg_gov: log of numbofdegree.
+
+sexeg: sex of the governor.
+
+party: dummy (1 if a republican governor).
+
+iregion: 1, 2, 3 or 4, Midwest, South, Northeast and West.
+
+
+
+Races: 
+
+EHI: Ethnic Heterogeneity Index.
+
+lEHI: logarithm of EHI.
+
+hisp: Percentage of population that is Hispanic.*
+
+white: Percentage of population that is non-Hispanic White.*
+
+black: Percentage of population that is Black.*
+
+native: Percentage of population that is American Indian or Alaska Native.*
+
+Asian: Percentage of population that is Asian.*
+
+Pacisl: Percentage of population that is Native Hawaiian or Other Pacific Islander.*
+
+Other: Percentage of population that is other races.
+
+twoormoreraces: Percentage of population that is two or more races.
+
+Totalpopulation/pop: Resident population
+
+hispanicorlatinoofanyrace: Number of residents that are Hispanic 
+
+whitealone: Number of residents that are non-Hispanic White.
+
+Blackorafricanamericanalone: Number of residents that are Black.
+
+Americanindianandalaskanativealo: Number of residents that are American Indian or Alaska Native
+
+asianalone: Number of residents that are Asian.
+
+Nativehawaiianandotherpacificisl: Number of residents that are Native Hawaiian or Other Pacific Islander.
+
+Someotherracealone: Number of residents that are another race.
+
+
+
+
+
+
+
+
+Interaction terms:
+
+seg_EHI: interaction between EHI and seg_index
+dens_EHI: interaction between EHI and density_2018.
+ageg_EHI: interaction between EHI and ageg.
+sexeg_EHI: interaction between EHI and sexeg
+party_EHI: interaction between EHI and party
+educg_EHI: interaction between lEHI and lnumbofdeg_gov
+
+Covid stats:
+
+cases_02_01: number of cumulative cases until the 1st of February
+cases_02_15: number of cumulative cases until February 15.
+cases_03_01: number of cumulative cases until the 1st of March
+cases_03_15: number of cumulative cases until March 15.
+cases_04_01: number of cumulative cases until the 1st of April
+cases_04_15: number of cumulative cases until April 15.
+cases_05_01: number of cumulative cases until May 1st.
+cases_05_15: number of cumulative cases until May 15.
+cases: number of cumulative cases until June 1st.
+deaths_02_01: number of cumulative deaths until February 1st.
+deaths_02_15: number of cumulative deaths until February 15.
+deaths_03_01: number of cumulative deaths until the 1st of March
+deaths_03_15: number of cumulative deaths until March 15.
+deaths_04_01: number of cumulative deaths until April 1st.
+deaths_04_15: number of cumulative deaths until April 15
+deaths_05_01: number of cumulative deaths until May 1st.
+deaths_05_15: number of cumulative deaths until May 15
+deaths: number of cumulative deaths until June 1st.
+deathrate_02_01: deathrate on February 1st.
+deathrate_02_15: deathrate on February15.
+deathrate_03_01: deathrate on March 1st.
+deathrate_03_15: deathrate on March 15.
+deathrate_04_01: deathrate on April 1st.
+deathrate_04_15: deathrate on April 15.
+deathrate_05_01: deathrate on May 1st.
+deathrate_05_15: deathrate on May 15.
+deathrate: deathrate on June 1st.
+
+* The descriptions come from County Health Rankings Data.
+** The description come from The New York Times and Dynata.
